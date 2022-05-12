@@ -93,7 +93,7 @@ class BERT_KG(nn.Module):
             sentences = []
             for ids in input_ids:
                 self.batch_count += 1
-                if self.graph_regularization == "wordnet":
+                if self.graph_regularization == "WN18RR":
                     sentence = self.tokenizer.batch_decode(ids)
                     sentences.append(sentence)
                     words_node, lookup_words_synsets = sentence_synsets(sentence, self.node_dict, device,
@@ -101,7 +101,7 @@ class BERT_KG(nn.Module):
                     node_batch.append(words_node)
                     lookup.append(lookup_words_synsets)
 
-                if self.graph_regularization == "freebase":
+                if self.graph_regularization == "FB15k-237":
                     sentence_node_embeddings = []
                     for i, target in enumerate(ids):
                         target = target.item()

@@ -456,7 +456,7 @@ def main():
         if os.path.exists(data_args.data_folder + model_args.knowledge_base + "/node_dict.pt"):
             logger.info("LOADING KBGAT NODE DICT...")
             node_dict = torch.load(data_args.data_folder + model_args.knowledge_base + "/node_dict.pt")
-            logger.info("FB15k-237 NODE DICT Loaded from .pt")
+            logger.info("NODE DICT Loaded from .pt")
         else:
             logger.info("RUN KBGAT BEFORE TRAIN BERT-KG")
             return
