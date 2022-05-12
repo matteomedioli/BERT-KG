@@ -262,7 +262,7 @@ def get_embeddings():
 
 
 args = parse_args()
-args.output_folder = args.data+"/checkpoints/"
+args.output_folder = args.data+"/checkpoints/" # TODO: create folder
 Corpus_, entity_embeddings, relation_embeddings = load_data(args)
 
 if(args.get_2hop):
@@ -278,8 +278,8 @@ if(args.use_2hop):
        node_neighbors_2hop = pickle.load(handle)
 
 CUDA = torch.cuda.is_available()
-writer = SummaryWriter(log_dir="models/gat_freebase/eval/runs/")
+writer = SummaryWriter(log_dir=args.data+"/writer/") # TODO: create folder
 train_gat(args, writer)
 evaluate_gat(args, Corpus_.unique_entities_train, writer)
 entities, relations = get_embeddings()
-torch.save(args.data+"/entities.pt") # freebase_entities.pt old
+torch.save(args.data+"/entities.pt") # TODO freebase_entities.pt check where used
