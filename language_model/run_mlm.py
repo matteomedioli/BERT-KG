@@ -165,9 +165,9 @@ class DataTrainingArguments:
         },
     )
     data_folder: Optional[str] = field(
-        default="/data/medioli/",
+        default="./data/",
         metadata={
-            "help": "Data folder. Default /data/medioli/"
+            "help": "Data folder. Default ./data/"
         },
     )
 
@@ -300,12 +300,7 @@ def main():
         "use_auth_token": True if model_args.use_auth_token else None,
     }
     if model_args.tokenizer_name:
-        if os.path.exists(
-                data_args.data_folder + "freebase/tokenizer_with_entities.pt") and model_args.tokenizer_name == "bert-base-uncased":
-            print("LOAD CUSTOM FREEBASE TOKENIZER")
-            tokenizer = torch.load(data_args.data_folder + "freebase/tokenizer_with_entities.pt")
-        else:
-            tokenizer = AutoTokenizer.from_pretrained(model_args.tokenizer_name, **tokenizer_kwargs)
+        tokenizer = AutoTokenizer.from_pretrained(model_args.tokenizer_name, **tokenizer_kwargs)
     elif model_args.model_name_or_path:
         tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, **tokenizer_kwargs)
     else:
@@ -313,7 +308,7 @@ def main():
             "You are instantiating a new tokenizer from scratch. This is not supported by this script."
             "You can do it from another script, save it, and load it from here, using --tokenizer_name."
         )
-
+    # TODO: add node labels from node_dict to tokenizer
     if model_args.model_name_or_path:
         model_mlm = AutoModelForMaskedLM.from_pretrained(
             model_args.model_name_or_path,
@@ -392,7 +387,7 @@ def main():
                     desc="Running tokenizer on dataset line_by_line",
                 )
                 torch.save(tokenized_datasets, data_args.data_folder + "/datasets/tokenized_datasets.pt")
-                logger.info("SAVED TOKENIZED DATASET")
+                logger.info("Tokenized Dataset Saved")
     else:
         # Otherwise, we tokenize every text, then concatenate them together before splitting them in smaller parts.
         # We use `return_special_tokens_mask=True` because DataCollatorForLanguageModeling (see below) is more
@@ -453,12 +448,11 @@ def main():
     )
 
     if model_args.knowledge_base:
-        if os.path.exists(data_args.data_folder + model_args.knowledge_base + "/node_dict.pt"):
-            logger.info("LOADING KBGAT NODE DICT...")
-            node_dict = torch.load(data_args.data_folder + model_args.knowledge_base + "/node_dict.pt")
-            logger.info("NODE DICT Loaded from .pt")
+        if os.path.exists("kbgat/data/" + model_args.knowledge_base + "/node_dict.pt"):
+            node_dict = torch.load("kbgat/data/" + model_args.knowledge_base + "/node_dict.pt")
+            logger.info("Loaded KGE Dictionary from node_dict.pt")
         else:
-            logger.info("RUN KBGAT BEFORE TRAIN BERT-KG")
+            logger.info("Compute KGE Dictionary before BERT-KG training - run_kbgat.py")
             return
 
     logger.info("Custom Bert Initialization")
@@ -473,7 +467,7 @@ def main():
 
     model = BERT_KG(node_dict, tokenizer, model_mlm, regression_model, config_custom,
                     data_args.data_folder, reg_lambda=10, graph_regularization=GRAPH_REGULARIZATION)
-    monitor = Monitor(path=data_args.data_folder + "monitor/train_log_embeddings_december/")
+    monitor = Monitor(path=data_args.data_folder + "writer")
 
     # Initialize Custom Trainer
     trainer = BertRegularizationTrainer(

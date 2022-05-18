@@ -79,7 +79,7 @@ class Monitor():
                 train_file.close()
 
                 # self.reg_loss_queue.append(reg_loss)
-                # TODO: Politica di gestion er incremento lambda regolarizzazione con varianza media e deviazione standard
+                # TODO: scheduler to adapt lambda based on std and variance of reg. loss
 
             if element == "pred":
                 pred_file = open(self.path + self.pred_file, "a")

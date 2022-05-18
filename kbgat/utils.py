@@ -2,6 +2,7 @@ import torch
 from itertools import zip_longest
 from tqdm import tqdm
 import json
+import logging
 
 def save_model(model, name, epoch, folder_name):
     print("Saving Model")
@@ -237,7 +238,7 @@ def wn18rr_node_dict():
                 D[id_triple[2]] = name_triple[2]
     lines = tuple(open("data/WN18RR/entity2id.txt", 'r'))
     node_dict = {}
-    gat_embeddings = torch.load("data/WN18RR/entities_gat.pt") # TODO: write entities tensor in the right place and read here
+    gat_embeddings = torch.load("data/WN18RR/entities_gat.pt")
     for line in tqdm(lines):
         node_dict[D[line.split()[0]]] = gat_embeddings[int(line.split()[1])]
     return node_dict
@@ -247,7 +248,7 @@ def fb15k_node_dict():
         entity2wikidata = json.load(json_file)
     lines = tuple(open("data/FB15K-237/entity2id.txt", 'r'))
     node_dict = {}
-    gat_embeddings = torch.load("data/FB15K-237/entities_gat.pt") # TODO: write entities tensor in the right place and read here
+    gat_embeddings = torch.load("data/FB15K-237/entities_gat.pt")
     for line in tqdm(lines):
         fb_id = line.split()[0]
         if fb_id in entity2wikidata:

@@ -59,7 +59,7 @@ class RobertaConfigCustom(BertConfigCustom):
 
 class BERT_KG(nn.Module):
     def __init__(self, node_dict, tokenizer, bert_model, regression_model, config_custom, data_folder, reg_lambda=10,
-                 graph_regularization="wordnet"):
+                 graph_regularization="WN18RR"):
         super(BERT_KG, self).__init__()
         self.graph_regularization = graph_regularization
         self.node_dict = node_dict
@@ -101,7 +101,7 @@ class BERT_KG(nn.Module):
                     node_batch.append(words_node)
                     lookup.append(lookup_words_synsets)
 
-                if self.graph_regularization == "FB15k-237":
+                if self.graph_regularization == "FB15K-237":
                     sentence_node_embeddings = []
                     for i, target in enumerate(ids):
                         target = target.item()

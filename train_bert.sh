@@ -1,5 +1,4 @@
 #!/bin/bash
-source /data/medioli/env/bin/activate
 export CUDA_LAUNCH_BLOCKING=1
 export TOKENIZERS_PARALLELISM=true
 export OMP_NUM_THREADS=64
@@ -7,7 +6,7 @@ export WANDB_DISABLED=true
 export CUDA_VISIBLE_DEVICES=6
 
 
-echo "[Training ${1} outputdir /data/medioli/models/mlm/${1}_${3}_${5}_${6}_${7}/ with tokenizer config ${2}custom on dataset ${3} with config ${4} for ${5} epochs with regularization: ${7} and data_folder: ${8}]"
+echo "[Training ${1} outputdir /data/models/mlm/${1}_${3}_${5}_${6}_${7}/ with tokenizer config ${2}custom on dataset ${3} with config ${4} for ${5} epochs with regularization: ${7} and data_folder: ${8}]"
 nohup python3 run_mlm.py \
 --dataset_name $3 \
 --tokenizer_name $2 \

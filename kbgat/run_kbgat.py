@@ -8,7 +8,7 @@ from copy import deepcopy
 
 from preprocess import init_embeddings, build_data
 from corpus import Corpus
-from utils import save_model
+from utils import save_model, wn18rr_node_dict, fb15k_node_dict
 from torch.utils.tensorboard import SummaryWriter
 
 import random
@@ -22,7 +22,7 @@ def parse_args():
     args = argparse.ArgumentParser()
     # network arguments
     args.add_argument("-data", "--data",
-                      default="./data/WN18RR", help="data directory")
+                      default="kbgat/data/WN18RR/", help="data directory")
     args.add_argument("-e_g", "--epochs_gat", type=int,
                       default=3600, help="Number of epochs")
     args.add_argument("-e_c", "--epochs_conv", type=int,
@@ -261,8 +261,9 @@ def get_embeddings():
     return entity_embed, relation_embed
 
 
+
 args = parse_args()
-args.output_folder = args.data+"/checkpoints/" # TODO: create folder
+args.output_folder = args.data+"/checkpoints/"
 Corpus_, entity_embeddings, relation_embeddings = load_data(args)
 
 if(args.get_2hop):
@@ -277,9 +278,22 @@ if(args.use_2hop):
    with open(file, 'rb') as handle:
        node_neighbors_2hop = pickle.load(handle)
 
-CUDA = torch.cuda.is_available()
-writer = SummaryWriter(log_dir=args.data+"/writer/") # TODO: create folder
-train_gat(args, writer)
-evaluate_gat(args, Corpus_.unique_entities_train, writer)
-entities, relations = get_embeddings()
-torch.save(args.data+"/entities.pt") # TODO freebase_entities.pt check where used
+if not os.path.exists(args.data+"/entities_gat.pt"):
+    CUDA = torch.cuda.is_available()
+    writer = SummaryWriter(log_dir=args.data+"/writer/")
+    train_gat(args, writer)
+    evaluate_gat(args, Corpus_.unique_entities_train, writer)
+    entities, relations = get_embeddings()
+    torch.save(entities, args.data+"/entities_gat.pt")
+else:
+    print("KGE Embeddings already computed in " + args.data+"/entities_gat.pt")
+    print("If you want to learn new KGE Embeddings, delete the .pt files.")
+    print()
+
+if args.data is "kbgat/data/WN18RR":
+    wn18rr_node_dict = wn18rr_node_dict()
+    torch.save(wn18rr_node_dict, args.data + "/node_dict.pt")
+
+if args.data is "kbgat/data/FB15K-237":
+    fb15k_node_dict = fb15k_node_dict()
+    torch.save(fb15k_node_dict, args.data + "/node_dict.pt")
