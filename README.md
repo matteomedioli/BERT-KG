@@ -24,12 +24,12 @@ sh setup.sh
 
 ### WN18RR
 ```
-python kbgat/run_kbgat.py --get_2hop True --data kbgat/data/WN18RR/
+python kbgat/run_kbgat.py --get_2hop True --data kbgat/data/WN18RR
 ```
 
 ### FB15K-237
 ```
-python main.py --epochs_gat 3000 --epochs_conv 200 --weight_decay_gat 0.00001 --get_2hop True --partial_2hop True --batch_size_gat 272115 --margin 1 --out_channels 50 --drop_conv 0.3 --weight_decay_conv 0.000001 --output_folder ./checkpoints/fb/out/ --data kbgat/data/FB15k-237/
+python main.py --epochs_gat 3000 --epochs_conv 200 --weight_decay_gat 0.00001 --get_2hop True --partial_2hop True --batch_size_gat 272115 --margin 1 --out_channels 50 --drop_conv 0.3 --weight_decay_conv 0.000001 --output_folder ./checkpoints/fb/out/ --data kbgat/data/FB15k-237
 ```
 
 ## BERT Training - Masked Language Modeling
