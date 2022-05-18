@@ -17,7 +17,7 @@ pip install -r requirements.txt
 
 ## Data Preprocessing
 ```
-python setup.py
+sh setup.sh
 ```
 
 ## Learn Knowledge Graph Embeddings
@@ -34,10 +34,10 @@ python main.py --epochs_gat 3000 --epochs_conv 200 --weight_decay_gat 0.00001 --
 
 ## BERT Training - Masked Language Modeling
 ```
-python language_model/run_mlm.py
+sh train_bert.sh
 ```
 
 ## Probing Tasks
 ```
-python probe_lm.py --chekpoint N
+sh probe.sh
 ```
