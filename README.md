@@ -36,8 +36,3 @@ python main.py --epochs_gat 3000 --epochs_conv 200 --weight_decay_gat 0.00001 --
 ```
 sh train_bert.sh
 ```
-
-## Probing Tasks
-```
-sh probe.sh
-```
